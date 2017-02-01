@@ -1,0 +1,207 @@
+---
+author: Joseph Stachelek
+title: "Nutrient retention potential in relation to lake water residence time across broad spatial scales"
+subtitle: MSU Fisheries and Wildlife Symposium
+date: "2017-02-24"
+output:
+  beamer_presentation:
+    keep_tex: no
+    theme: metropolis
+    latex_engine: xelatex
+    slide_level: 2
+    incremental: no
+    includes:
+      in_header: header.tex
+fontsize: 12pt
+classoption: compress
+---
+
+```{r,setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+## What is nutrient retention?
+
+How much nutrients are present in lake outflow as a percentage of loadings?
+
+* Buffering Capacity
+* Sensitivity
+
+Who cares about nutrient retention?
+
+## What is the mystery about nutrient retention?
+
+Milstead found much less nutrient retention than previous studies. Does shorter residence or connectivity explain the discrepancy?
+
+## What is water residence time?
+
+$$t_w=V_L/Q$$
+
+```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=3, fig.width=5}
+MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
+
+library(ggplot2)
+ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic() + ylab("Count") + xlab("Water Residence Time (y)") + coord_cartesian(xlim=c(1e-06,1)) + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
+
+# hivolumerating <- as.numeric(MRB1$Volume > median(MRB1$Volume))
+# hiflowrating   <- as.numeric(MRB1$FlowM3_yr > median(MRB1$FlowM3_yr))
+# hiflowrating[hiflowrating == 0] <- 2
+# hiflowrating[hiflowrating == 1] <- 4
+# 
+# rating <- hiflowrating + hivolumerating
+# rating[rating == 3] <- "low"
+# rating[rating == 4] <- "high"
+# rating[rating == 2 | rating == 5] <- "medium"
+# rating <- factor(rating, levels = c("low", "medium", "high"))
+# 
+# res <- matrix(table(rating) / nrow(MRB1), nrow = 2)
+# row.names(res) <- c("low volume", "high volume")
+# res <- data.frame(res)
+# names(res) <- c("low flow", "high flow")
+
+# plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100))
+```
+
+## More about nutrient retention
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.height=3.0, fig.width=4.2}
+MRB1 <- MRB1[MRB1$hrt > 0,]
+gg <- ggplot(MRB1, aes(x=hrt, y=1-Poutput/Pinput)) + geom_point(color = "grey") + scale_x_log10() + theme_classic() + xlab("Water Residence Time") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
+
+
+x <- log(MRB1$hrt)
+y <- 1-MRB1$Poutput/MRB1$Pinput
+y <- y[x > -Inf]
+x <- x[x > -Inf]
+dat <- data.frame(cbind(x, y))
+
+fit <- nls(y~a/(1+exp(-b * (x-c))), start = list(a=1, b=0.3, c= .1))
+# library(mgcv)
+# fit <- mgcv::gam(y~s(x), data = dat)
+
+dummy_x <- seq(0.000001, 100, by = 0.1)
+preds <- predict(fit, data.frame(x = dummy_x))
+# preds <- preds - min(preds)
+preds <- data.frame(x = log(dummy_x), preds = as.numeric(preds))
+# plot(preds$x, preds$preds, ylim = c(0,1))
+
+gg #+ geom_line(data = preds, aes(x, preds)) + coord_cartesian(xlim = c(1e-6, 10), ylim = c(0, 1))
+
+```
+
+```{r eval=FALSE, echo=FALSE}
+# dummy_y <- seq(0, 1, length.out = length(dummy_x))
+# plot(dummy_x, dummy_y, col = "white", xaxt = "n", xlim = c(0.01, 100), log = "x", xlab = "Hydraulic Residence Time (yr)", ylab= "1 - TPout/TPin")
+# ticks <- seq(-3, 2, by = 1)
+# labels <- sapply(ticks, function(x) as.expression(bquote(10^ .(x))))
+# axis(1, at = c(0.001, 0.01, 0.1, 1, 10, 100), labels = labels)
+# points(log(MRB1$hrt), (1 - (MRB1$Pout/MRB1$Pin)), pch = 19, col = "gray")
+```
+
+## What are lake connectivity classes?
+<!-- http://cremeronline.com/LaTeX/minimaltikz.pdf -->
+
+
+
+<!-- \draw [help lines] (0,3) grid (4,-3); -->
+\begin{tikzpicture}
+\draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0);
+\draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] plot (\x:1+rnd*0.5);
+\node at (0, 0) {Primary};
+\end{tikzpicture}
+
+## What is LAGOS?
+
+## What is SPARROW?
+
+## What are my predictions?
+
+\tiny
+```{r echo=FALSE,caption="conceptual table"}
+knitr::kable(data.frame(Connectivity = c("headwater", "isolated", "primary flowthrouh", "secondary flowthrough"), `Groundwater\\Surfacewater` = c("gw", "gw", "sw", "sw"), Retention = c("low", "high", "low", "high"), `Residence Time` = c("low", "high", "low", "high")), pad = 0)
+```
+
+
+## A Slide Header
+
+### A Subtitle
+
+- Point A
+- Point B
+- Point C
+
+## Metropolis
+
+### Main Repos
+
+- [Official GitHub Repo of Metropolis](https://github.com/matze/mtheme)
+  (formerly mtheme); older version in TeXLive 
+- [My GitHub Repo for a local Ubuntu package of Metropolis](https://github.com/eddelbuettel/pkg-latex-metropolis) -- formerly mtheme
+- [My GitHub Repo for a local Ubuntu package for the Fira font](https://github.com/eddelbuettel/pkg-fonts-fira) 
+
+## Ubuntu and Launchpad
+
+### Briefly
+
+- The packages which can be built (ie not Fira as it needs external fonts
+  which we cannot download during build) are
+  [in this repo](https://launchpad.net/~edd/+archive/ubuntu/misc/+packages)
+- If you're not on Ubuntu, it is probably more work to get
+    - Metropolis into your \LaTeX environment
+    - the Fira font into your \LaTeX environment
+- I *did* try without (on plain Ubuntu 16.04) and it _builds_ but looks less
+crisp
+- So for the time being you probably want these fresh from source, or via my
+helpers. YMMV.
+
+## Local Adaption
+
+- mtheme and metropolis changed a bit since I first used them
+- I started with a local modification I called m2; the package is still in
+the launchpad repo
+- I generally include a file `header.tex` from the YAML for color, font,
+  ... tweaking at the \LaTeX level, but as these are presentation-specific I
+  didn't include any changes here.
+
+_ _ _
+
+\LARGE Breakout page 
+
+## Using LaTeX Parts: Equations
+
+### Linear Model
+
+$$ \hat{\beta} = \text{argmin}_{b \in \mathbb{R}} S(b) = \left( \frac{1}{n} \sum_{i=1}^n x_i x_i^T \right)^{-1} \cdot \frac{1}{n} \sum_{i=1}^n x_i y_i  $$
+or in matrix form
+
+$$ \hat{\beta} = (X^TX)^{-1} X^T y $$
+
+
+## Using LaTeX Parts: Blocks
+
+As one example of falling back into \LaTeX, consider the example of
+three different block environments are pre-defined and may be styled
+with an optional background color.
+
+<!-- this sets the background -->
+\metroset{block=fill} 
+
+\begin{block}{Default}
+  Block content.
+\end{block}
+
+\begin{alertblock}{Alert}
+  Block content.
+\end{alertblock}
+
+\begin{exampleblock}{Example}
+  Block content.
+\end{exampleblock}
+
+## Finally
+
+### Going Forward
+
+- Questions etc: Open issue tickets [at the GitHub repo](https://github.com/eddelbuettel/samples-rmarkdown-metropolis/issues)
+- Pull requests welcome for bug fixes, extensions, examples, ...
+
