@@ -34,7 +34,9 @@ knitr::opts_chunk$set(cache=TRUE)
 \endcol
 \begincol{0.6\textwidth}
 \center
-\lakediagram
+\vspace{-2em}
+\lakediagramblue
+\lakediagramgreen
 
 \endcol
 \endcols
@@ -171,6 +173,14 @@ knitr::include_graphics("images/brett-2008_fig6.png")
 
 ## What are my predictions?
 
+\center
+```{r predictions, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
+knitr::include_graphics("/home/jose/Documents/Science/Dissertation/Proposal/inkscape/drawing.png")
+```
+
+
+## What are my predictions?
+
 \small
 ```{r echo=FALSE,caption="conceptual table", results="asis"}
 pander::pandoc.table(
@@ -182,7 +192,6 @@ pander::pandoc.table(
   , keep.line.breaks = TRUE)
 
 ```
-
 
 ## How I will test my predictions
 
@@ -198,9 +207,27 @@ pander::pandoc.table(
 
 ## What is SPARROW?
 
+\pagecolor{white}
+
+\center
+```{r sparrow, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
+knitr::include_graphics("images/sparrow.png")
+```
+
+* A spatial not temporal model (operates on mean annual values)
+
+$$wq \sim land use + soils + precipitation + water velocity$$
+
+* base year is 2002
+
 ## What is LAGOS?
 
-< LAGOS map >
+\center
+```{r lagos_fig, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
+knitr::include_graphics("images/lagos_study-extent.png")
+```
+
+* Approximately 50,000 lakes
 
 _ _ _
 

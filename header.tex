@@ -53,8 +53,49 @@
 \def\endcol{\end{column}}
 
 \usetikzlibrary{decorations.pathmorphing,calc}
-\def\lakediagram{
+\def\lakediagramgreen{
 \begin{tikzpicture}[scale = 0.6]
+% https://tex.stackexchange.com/questions/95044/create-diagrams-in-latex-with-tikz
+
+% Define some reference points 
+% The figure is drawn a bit bigger, and then clipped to the following dimensions:
+\coordinate (clipping area) at (10, 7);
+\clip (0,0) rectangle (clipping area);
+
+% Next reference points are relative to the lower left corner of the clipping area
+\coordinate (water level) at (0, 6);
+\coordinate (bottom)      at (5, 1.3);     % (bottom of the pit)
+\coordinate (ground1)     at (0, 5);       % (left shore)
+\coordinate (ground2)     at (10, 5);      % (right shore)
+
+% Coordinates of the bigger area really drawn
+\coordinate (lower left)  at ([xshift=-5mm, yshift=-5mm] 0,0);
+\coordinate (upper right) at ([xshift=5mm,  yshift=5mm] clipping area);
+
+% Draw the water and ripples
+\draw [draw=blue!80!black, decoration={bumps, mirror, segment length=6mm}, decorate,
+     bottom color=cyan!60!black, top color=green!20!white] 
+  (lower left) rectangle (water level-|upper right);
+
+% Draw the ground
+\draw [draw=brown!30!black, fill=brown] 
+  (lower left) -- (lower left|-ground1)  --
+  (ground1) .. controls ($(ground1)!.3!(bottom)$) and (bottom-|ground1) ..
+  (bottom) .. controls (bottom-|ground2) and ($(ground2)!.3!(bottom)$) .. 
+  (ground2) -- (ground2-|upper right) -- (lower left-|upper right) -- cycle;
+
+% \draw[dotted](0,0) rectangle (clipping area);
+
+% labels
+\draw[>=stealth, ->, line width = 0.7mm] (0, 5.5) -- (3, 5.5) node at (1.5, 4.8) {Inputs};
+\draw[>=stealth, ->, line width = 0.2mm] (8, 5.5) -- (10, 5.5) node at (8.5, 4.8) {Outputs};
+
+\end{tikzpicture}
+}
+
+\def\lakediagramblue{
+\begin{tikzpicture}[scale = 0.6]
+% https://tex.stackexchange.com/questions/95044/create-diagrams-in-latex-with-tikz
 
 % Define some reference points 
 % The figure is drawn a bit bigger, and then clipped to the following dimensions:
@@ -84,6 +125,10 @@
   (ground2) -- (ground2-|upper right) -- (lower left-|upper right) -- cycle;
 
 % \draw[dotted](0,0) rectangle (clipping area);
+
+% labels
+\draw[>=stealth, ->, line width = 0.5mm] (0, 5.5) -- (3, 5.5) node at (1.5, 4.8) {Inputs};
+\draw[>=stealth, ->, line width = 0.5mm] (8, 5.5) -- (10, 5.5) node at (8.5, 4.8) {Outputs};
 
 \end{tikzpicture}
 }
