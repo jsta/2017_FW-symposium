@@ -22,24 +22,50 @@ knitr::opts_chunk$set(cache=TRUE)
 
 ## What is nutrient retention?
 
-### How much nutrients are present in lake outflow as a percentage of loadings?
+<!-- ### How much nutrients are present in lake outflow as a percentage of loadings? -->
+
+\begincols
+\begincol{0.4\textwidth}
 
 * Buffering Capacity
-* Sensitivity
+
+* Nutrient Sensitivity
+
+\endcol
+\begincol{0.6\textwidth}
+\center
+\lakediagram
+
+\endcol
+\endcols
 
 ## Who cares about nutrient retention?
 
+* Water quality
+
+* CNH implications
+
+* Nutrient/Ag regulations
+
+< eutrophication picture >
+
 ## What is the mystery about nutrient retention?
 
-Milstead found much less nutrient retention than previous studies. 
+### Unresolved questions about average retention and its geographical distribution
 
-## Does shorter residence explain the discrepancy?
+* Difficult to measure
+
+* Previous studies limited to small numbers of lakes (w/ long residence times?)
+
+* Milstead et al. (2013) found much less nutrient retention than previous studies. 
+
+## Does shorter residence time explain the discrepancy?
 
 ### What is water residence time?
 
 $$t_w=\frac{V_L}{Q}$$
 
-```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.7, fig.width=5}
+```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"}
 MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
 
 library(ggplot2)
@@ -64,7 +90,7 @@ ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic(
 # plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100))
 ```
 
-## More about nutrient retention
+## Previous studies on nutrient retention
 
 \begincols
 \begincol{0.5\textwidth}
@@ -160,15 +186,30 @@ pander::pandoc.table(
 
 ## How I will test my predictions
 
-### What is LAGOS?
+### How to calculate nutrient retention?
 
-### What is SPARROW?
+* Loading concentration
 
-## Using LaTeX Parts: Blocks
+* Outflow concentration
 
-As one example of falling back into \LaTeX, consider the example of
-three different block environments are pre-defined and may be styled
-with an optional background color.
+* Water flux
+
+* Connectivity classes
+
+## What is SPARROW?
+
+## What is LAGOS?
+
+< LAGOS map >
+
+_ _ _
+
+\LARGE Links-References-Thanks
+
+## Using Blocks
+
+Consider the example of three different block environments
+are pre-defined and may be styled with an optional background color.
 
 <!-- this sets the background -->
 \metroset{block=fill} 
@@ -184,7 +225,3 @@ with an optional background color.
 \begin{exampleblock}{Example}
   Block content.
 \end{exampleblock}
-
-_ _ _
-
-\LARGE Questions
