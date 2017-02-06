@@ -21,33 +21,42 @@ knitr::opts_chunk$set(cache=TRUE)
 ```
 
 ## Where do nutrients come from?
+<!-- https://www.ars.usda.gov/oc/images/image-gallery/ -->
 
-* Land-use
+\flushleft
+```{r cows, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="110pt", fig.align='left'}
+knitr::include_graphics("images/nutrientmontage.png")
+```
 
-* Agriculture
+\begincols
+\begincol{0.3\textwidth}
+Livestock
+\endcol
+\begincol{0.3\textwidth}
+Agriculture
+\endcol
+\begincol{0.3\textwidth}
+Stormwater runoff
+\endcol
+\endcols
+
+<!-- * Land-use -->
+<!-- * Agriculture -->
 
 ## What is nutrient retention?
 
 <!-- ### How much nutrients are present in lake outflow as a percentage of loadings? -->
 
-\begincols
-\begincol{0.4\textwidth}
+\center
+\vspace{-1em}
+\lakediagramblue
+\lakediagramgreen
+
+## Who cares about nutrient retention?
 
 * Buffering Capacity
 
 * Nutrient Sensitivity
-
-\endcol
-\begincol{0.6\textwidth}
-\center
-\vspace{-2em}
-\lakediagramblue
-\lakediagramgreen
-
-\endcol
-\endcols
-
-## Who cares about nutrient retention?
 
 * Water quality
 
@@ -145,7 +154,6 @@ ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic(
 
 \connectivitydiagram
 
-
 ## What are my predictions?
 
 \center
@@ -156,7 +164,7 @@ knitr::include_graphics("images/conceptual.png")
 
 ## What are my predictions?
 
-\centering
+\center
 \begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |}
 \multicolumn{2}{c}{}
 & \multicolumn{3}{c}{Connectivity} \\
@@ -184,7 +192,11 @@ knitr::include_graphics("images/conceptual.png")
 
 ## What are the implications of this work?
 
-* Big picture
+\center
+```{r lagos, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
+knitr::include_graphics("images/lagos_study-extent.png.png")
+```
+
 
 <!-- http://www.jpl.nasa.gov/spaceimages/images/largesize/PIA03434_hires.jpg -->
 
