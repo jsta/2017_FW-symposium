@@ -160,17 +160,16 @@ knitr::include_graphics("images/conceptual.png")
 \begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |}
 \multicolumn{2}{c}{}
 & \multicolumn{3}{c}{Connectivity} \\
-\multirow{1}{*}{\rotatebox[origin=l]{90}{Water Residence Time}}\\
 \multicolumn{2}{c}{}
  &  \multicolumn{1}{c}{High}
  &  \multicolumn{1}{c}{Medium}
  & \multicolumn{1}{c}{Low} \\
 \cline{3-5}
-& \rotatebox[origin=c]{90}{Low} & Low & &\\
+& \rotatebox[origin=c]{90}{Low} & \cellcolor{black!25}Medium & \cellcolor{black!10}Low & Low\\
 \cline{3-5}
-& \rotatebox[origin=c]{90}{Medium} & High & Medium &\\
+\raisebox{-.5\normalbaselineskip}[0pt][0pt]{\rotatebox[origin=c]{90}{Water Residence Time}} & \rotatebox[origin=c]{90}{Medium} & \cellcolor{black!45}High & \cellcolor{black!25}Medium & \cellcolor{black!10}Low\\
 \cline{3-5}
-& \rotatebox[origin=c]{90}{High} & & High&\\
+& \rotatebox[origin=c]{90}{High} & \cellcolor{black!55}High & \cellcolor{black!45}High & \cellcolor{black!25}Medium\\
 \cline{3-5}
 \end{tabularx}
 
