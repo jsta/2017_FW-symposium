@@ -1,6 +1,6 @@
 ---
 author: Joseph Stachelek
-title: "Nutrient retention potential in relation to lake water residence time across broad spatial scales"
+title: "Phosphorus in 1,000s of Lakes"
 subtitle: MSU Fisheries and Wildlife Symposium
 date: "2017-02-24"
 output:
@@ -19,6 +19,12 @@ classoption: compress
 ```{r,setup, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE)
 ```
+
+## Where do nutrients come from?
+
+* Land-use
+
+* Agriculture
 
 ## What is nutrient retention?
 
@@ -51,52 +57,14 @@ knitr::opts_chunk$set(cache=TRUE)
 
 < eutrophication picture >
 
-## What is the mystery about nutrient retention?
-
-### Unresolved questions about average retention and its geographical distribution
-
-* Difficult to measure
-
-* Previous studies limited to small numbers of lakes (w/ long residence times?)
-
-* Milstead et al. (2013) found much less nutrient retention than previous studies. 
-
-## Does shorter residence time explain the discrepancy?
-
-### What is water residence time?
-
-$$t_w=\frac{V_L}{Q}$$
-
-```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"}
-MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
-
-library(ggplot2)
-ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic() + ylab("Count") + xlab("Water Residence Time (y)") + coord_cartesian(xlim=c(1e-06,1)) + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
-
-# hivolumerating <- as.numeric(MRB1$Volume > median(MRB1$Volume))
-# hiflowrating   <- as.numeric(MRB1$FlowM3_yr > median(MRB1$FlowM3_yr))
-# hiflowrating[hiflowrating == 0] <- 2
-# hiflowrating[hiflowrating == 1] <- 4
-# 
-# rating <- hiflowrating + hivolumerating
-# rating[rating == 3] <- "low"
-# rating[rating == 4] <- "high"
-# rating[rating == 2 | rating == 5] <- "medium"
-# rating <- factor(rating, levels = c("low", "medium", "high"))
-# 
-# res <- matrix(table(rating) / nrow(MRB1), nrow = 2)
-# row.names(res) <- c("low volume", "high volume")
-# res <- data.frame(res)
-# names(res) <- c("low flow", "high flow")
-
-# plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100))
-```
+## What do we know about nutrient retention?
 
 ## Previous studies on nutrient retention
 
 \begincols
 \begincol{0.5\textwidth}
 ```{r echo=FALSE, warning=FALSE, message=FALSE,eval=TRUE, fig.height=4.2, fig.width=4.6}
+MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
 MRB1 <- MRB1[MRB1$hrt > 0,]
 gg <- ggplot(MRB1, aes(x=hrt, y=1-Poutput/Pinput)) + geom_point(color = "grey") + scale_x_log10() + theme_classic() + xlab("Water Residence Time") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
 
@@ -129,6 +97,45 @@ knitr::include_graphics("images/brett-2008_fig6.png")
 ```
 \endcol
 \endcols
+
+## What is the mystery about nutrient retention?
+
+### Unresolved questions about average retention and its geographical distribution
+
+* Difficult to measure
+
+* Previous studies limited to small numbers of lakes (w/ long residence times?)
+
+* Milstead et al. (2013) found much less nutrient retention than previous studies. 
+
+## Does shorter residence time explain the discrepancy?
+
+### What is water residence time?
+
+$$t_w=\frac{V_L}{Q}$$
+
+```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"}
+library(ggplot2)
+ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic() + ylab("Count") + xlab("Water Residence Time (y)") + coord_cartesian(xlim=c(1e-06,1)) + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
+
+# hivolumerating <- as.numeric(MRB1$Volume > median(MRB1$Volume))
+# hiflowrating   <- as.numeric(MRB1$FlowM3_yr > median(MRB1$FlowM3_yr))
+# hiflowrating[hiflowrating == 0] <- 2
+# hiflowrating[hiflowrating == 1] <- 4
+# 
+# rating <- hiflowrating + hivolumerating
+# rating[rating == 3] <- "low"
+# rating[rating == 4] <- "high"
+# rating[rating == 2 | rating == 5] <- "medium"
+# rating <- factor(rating, levels = c("low", "medium", "high"))
+# 
+# res <- matrix(table(rating) / nrow(MRB1), nrow = 2)
+# row.names(res) <- c("low volume", "high volume")
+# res <- data.frame(res)
+# names(res) <- c("low flow", "high flow")
+
+# plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100))
+```
 
 ## Is connectivity predictive of nutrient retention?
 
@@ -175,35 +182,77 @@ knitr::include_graphics("images/brett-2008_fig6.png")
 
 \center
 ```{r predictions, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
-knitr::include_graphics("/home/jose/Documents/Science/Dissertation/Proposal/inkscape/drawing.png")
+knitr::include_graphics("images/conceptual.png")
 ```
 
 
 ## What are my predictions?
 
-\small
-```{r echo=FALSE,caption="conceptual table", results="asis"}
-pander::pandoc.table(
-    data.frame(
-    "Connectivity" = c("Headwater", "Isolated", "Primary-Flowthrough", "Secondary-Flowthrough"),
-    "Ground\nSurfacewater" = c("GW", "GW", "SW", "SW"),
-    "Nutrient\nRetention" = c("Low", "High", "Low", "High"),
-    "Water\nResidence\n\n\nTime\n" = c("Low", "High", "Low", "High"), check.names = FALSE)
-  , keep.line.breaks = TRUE)
-
-```
+\begin{center}
+\begin{tabular}{ r c| c | c | }
+\multicolumn{2}{c}{}
+& \multicolumn{2}{c}{Water Residence Time} \\
+\multicolumn{2}{c}{}
+ &  \multicolumn{1}{c}{Low}
+ & \multicolumn{1}{c}{High} \\
+\cline{3-4}
+& \rotatebox[origin=c]{90}{Low} & Low & High \\
+\cline{3-4}
+\rotatebox[origin=c]{90}{Connectivity} & \rotatebox[origin=c]{90}{Medium} & Medium & Medium \\
+\cline{3-4}
+& \rotatebox[origin=c]{90}{High} & Low & \\
+\cline{3-4}
+\end{tabular}
+\end{center}
 
 ## How I will test my predictions
 
-### How to calculate nutrient retention?
+1. Calculate water residence time in 50,000 lakes
 
-* Loading concentration
+2. Calculate nutrient retention
 
-* Outflow concentration
+3. Relate retention, residence time, and connectivity
 
-* Water flux
+## What are the implications of this work?
 
-* Connectivity classes
+* Big picture
+
+\bgroup
+\pgfdeclareimage[width=\paperwidth]{empty}{images/PIA03434_hires.jpg}
+\usebackgroundtemplate{\pgfuseimage{empty}}
+
+## New Slide
+
+some text
+\egroup
+
+
+
+_ _ _
+
+\LARGE Links-References
+
+stachel2@msu.edu
+
+## Using Blocks
+
+Consider the example of three different block environments
+are pre-defined and may be styled with an optional background color.
+
+<!-- this sets the background -->
+\metroset{block=fill} 
+
+\begin{block}{Default}
+  Block content.
+\end{block}
+
+\begin{alertblock}{Alert}
+  Block content.
+\end{alertblock}
+
+\begin{exampleblock}{Example}
+  Block content.
+\end{exampleblock}
 
 ## What is SPARROW?
 
@@ -228,27 +277,3 @@ knitr::include_graphics("images/lagos_study-extent.png")
 ```
 
 * Approximately 50,000 lakes
-
-_ _ _
-
-\LARGE Links-References-Thanks
-
-## Using Blocks
-
-Consider the example of three different block environments
-are pre-defined and may be styled with an optional background color.
-
-<!-- this sets the background -->
-\metroset{block=fill} 
-
-\begin{block}{Default}
-  Block content.
-\end{block}
-
-\begin{alertblock}{Alert}
-  Block content.
-\end{alertblock}
-
-\begin{exampleblock}{Example}
-  Block content.
-\end{exampleblock}
