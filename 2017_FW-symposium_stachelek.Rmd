@@ -143,40 +143,8 @@ ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic(
 <!-- http://cremeronline.com/LaTeX/minimaltikz.pdf -->
 <!-- \draw [help lines] (0,3) grid (4,-3); -->
 
-\begin{columns}
-  
-  \begin{column}{0.25\textwidth}
-    \begin{tikzpicture}
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] plot (\x:1+rnd*0.5);
-      \node at (0, 0) {Isolated};
-    \end{tikzpicture}
-  \end{column}
-  
-  \begin{column}{0.25\textwidth}
-  \begin{tikzpicture}
-      \draw [-,ultra thick, cyan] (0,0) to [out=90,in=0] (0.2,-2) to [out=180,in=90] (-1,-3);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] (0,3) plot (\x:1+rnd*0.5);
-      \node at (0, 0) {Headwater};
-    \end{tikzpicture}
-  \end{column}
-  
-  \begin{column}{0.25\textwidth}
-    \begin{tikzpicture}
-      \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] (0,-3) plot (\x:1+rnd*0.5);
-      \node at (0, 0) {Primary};
-    \end{tikzpicture}
-  \end{column}
-  
-  \begin{column}{0.25\textwidth}
-    \begin{tikzpicture}
-      \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0.3) to [out=90,in=0] (0,-1) to [out=90,in=0] (0.2,-2) to [out=180,in=90] (-1,-3);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=20] plot (\x:0.5+rnd*0.25);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=-50] plot (\x:0.8+rnd*0.5);
-      \node at (0,-1.7) {Secondary};
-    \end{tikzpicture}
-  \end{column}
-\end{columns}
+\connectivitydiagram
+
 
 ## What are my predictions?
 
@@ -188,22 +156,24 @@ knitr::include_graphics("images/conceptual.png")
 
 ## What are my predictions?
 
-\begin{center}
-\begin{tabular}{ r c| c | c | }
+\centering
+\begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |}
 \multicolumn{2}{c}{}
-& \multicolumn{2}{c}{Water Residence Time} \\
+& \multicolumn{3}{c}{Connectivity} \\
+\multirow{1}{*}{\rotatebox[origin=l]{90}{Water Residence Time}}\\
 \multicolumn{2}{c}{}
- &  \multicolumn{1}{c}{Low}
- & \multicolumn{1}{c}{High} \\
-\cline{3-4}
-& \rotatebox[origin=c]{90}{Low} & Low & High \\
-\cline{3-4}
-\rotatebox[origin=c]{90}{Connectivity} & \rotatebox[origin=c]{90}{Medium} & Medium & Medium \\
-\cline{3-4}
-& \rotatebox[origin=c]{90}{High} & Low & \\
-\cline{3-4}
-\end{tabular}
-\end{center}
+ &  \multicolumn{1}{c}{High}
+ &  \multicolumn{1}{c}{Medium}
+ & \multicolumn{1}{c}{Low} \\
+\cline{3-5}
+& \rotatebox[origin=c]{90}{Low} & Low & &\\
+\cline{3-5}
+& \rotatebox[origin=c]{90}{Medium} & High & Medium &\\
+\cline{3-5}
+& \rotatebox[origin=c]{90}{High} & & High&\\
+\cline{3-5}
+\end{tabularx}
+
 
 ## How I will test my predictions
 
@@ -217,63 +187,49 @@ knitr::include_graphics("images/conceptual.png")
 
 * Big picture
 
-\bgroup
-\pgfdeclareimage[width=\paperwidth]{empty}{images/PIA03434_hires.jpg}
-\usebackgroundtemplate{\pgfuseimage{empty}}
+<!-- http://www.jpl.nasa.gov/spaceimages/images/largesize/PIA03434_hires.jpg -->
 
-## New Slide
+<!-- ## Using Blocks -->
 
-some text
-\egroup
+<!-- Consider the example of three different block environments -->
+<!-- are pre-defined and may be styled with an optional background color. -->
 
+<!-- <!-- this sets the background -->
+<!-- \metroset{block=fill}  -->
 
+<!-- \begin{block}{Default} -->
+<!--   Block content. -->
+<!-- \end{block} -->
 
-_ _ _
+<!-- \begin{alertblock}{Alert} -->
+<!--   Block content. -->
+<!-- \end{alertblock} -->
 
-\LARGE Links-References
+<!-- \begin{exampleblock}{Example} -->
+<!--   Block content. -->
+<!-- \end{exampleblock} -->
 
-stachel2@msu.edu
+<!-- ## What is SPARROW? -->
 
-## Using Blocks
+<!-- \pagecolor{white} -->
 
-Consider the example of three different block environments
-are pre-defined and may be styled with an optional background color.
+<!-- \center -->
+<!-- ```{r sparrow, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"} -->
+<!-- knitr::include_graphics("images/sparrow.png") -->
+<!-- ``` -->
 
-<!-- this sets the background -->
-\metroset{block=fill} 
+<!-- * A spatial not temporal model (operates on mean annual values) -->
 
-\begin{block}{Default}
-  Block content.
-\end{block}
+<!-- $$wq \sim land use + soils + precipitation + water velocity$$ -->
 
-\begin{alertblock}{Alert}
-  Block content.
-\end{alertblock}
+<!-- * base year is 2002 -->
 
-\begin{exampleblock}{Example}
-  Block content.
-\end{exampleblock}
+<!-- ## What is LAGOS? -->
 
-## What is SPARROW?
+<!-- \center -->
+<!-- ```{r lagos_fig, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"} -->
+<!-- knitr::include_graphics("images/lagos_study-extent.png") -->
+<!-- ``` -->
 
-\pagecolor{white}
+<!-- * Approximately 50,000 lakes -->
 
-\center
-```{r sparrow, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
-knitr::include_graphics("images/sparrow.png")
-```
-
-* A spatial not temporal model (operates on mean annual values)
-
-$$wq \sim land use + soils + precipitation + water velocity$$
-
-* base year is 2002
-
-## What is LAGOS?
-
-\center
-```{r lagos_fig, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
-knitr::include_graphics("images/lagos_study-extent.png")
-```
-
-* Approximately 50,000 lakes
