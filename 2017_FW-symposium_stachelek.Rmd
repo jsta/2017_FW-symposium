@@ -121,6 +121,10 @@ knitr::include_graphics("images/brett-2008_fig6.png")
 
 ### What is water residence time?
 
+How long would it take to fill up an empty lake?
+
+Show a bar-chart of residence times with well-known lakes for comparison.
+
 $$t_w=\frac{V_L}{Q}$$
 
 ```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"}
@@ -153,6 +157,8 @@ ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic(
 <!-- \draw [help lines] (0,3) grid (4,-3); -->
 
 \connectivitydiagram
+
+## Show some connectivity data
 
 ## What are my predictions?
 
