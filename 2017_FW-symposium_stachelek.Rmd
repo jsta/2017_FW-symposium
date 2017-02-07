@@ -20,22 +20,25 @@ classoption: compress
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
-## Where do nutrients come from?
+## Where does phosphorus come from?
 <!-- https://www.ars.usda.gov/oc/images/image-gallery/ -->
 
 \flushleft
-```{r cows, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="110pt", fig.align='left'}
+```{r cows, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="115pt", fig.align='left'}
 knitr::include_graphics("images/nutrientmontage.png")
 ```
 
 \begincols
 \begincol{0.3\textwidth}
+\flushright
 Livestock
 \endcol
 \begincol{0.3\textwidth}
+\flushleft
 Agriculture
 \endcol
 \begincol{0.3\textwidth}
+\center
 Stormwater runoff
 \endcol
 \endcols
@@ -43,30 +46,50 @@ Stormwater runoff
 <!-- * Land-use -->
 <!-- * Agriculture -->
 
-## What is nutrient retention?
+## Where does phosphorus go?
+
+\begincols
+\begincol{0.5\textwidth}
+
+* Plant and animal biomass
+
+* Particle settling
+
+* Outflow / Export
+
+\endcol
+\begincol{0.5\textwidth}
+
+<!-- ## What is nutrient retention? -->
 
 <!-- ### How much nutrients are present in lake outflow as a percentage of loadings? -->
 
 \center
-\vspace{-1em}
+\vspace{-3.2em}
 \lakediagramblue
+\vspace{-1em}
 \lakediagramgreen
 
-## Who cares about nutrient retention?
+\endcol
+\endcols
 
-* Buffering Capacity
+<!-- ## Who cares about nutrient retention? -->
 
-* Nutrient Sensitivity
+<!-- * Buffering Capacity -->
 
-* Water quality
+<!-- * Nutrient Sensitivity -->
 
-* CNH implications
+<!-- * Water quality -->
 
-* Nutrient/Ag regulations
+<!-- * CNH implications -->
 
-< eutrophication picture >
+<!-- * Nutrient/Ag regulations -->
 
 ## What do we know about nutrient retention?
+
+* Particle settling is important
+
+* Greater retention is associated with longer residence times
 
 ## Previous studies on nutrient retention
 
@@ -75,7 +98,7 @@ Stormwater runoff
 ```{r echo=FALSE, warning=FALSE, message=FALSE,eval=TRUE, fig.height=4.2, fig.width=4.6}
 MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
 MRB1 <- MRB1[MRB1$hrt > 0,]
-gg <- ggplot(MRB1, aes(x=hrt, y=1-Poutput/Pinput)) + geom_point(color = "grey") + scale_x_log10() + theme_classic() + xlab("Water Residence Time") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
+gg <- ggplot(MRB1, aes(x=hrt, y=1-Poutput/Pinput)) + geom_point(color = "grey") + scale_x_log10() + theme_classic() + xlab("Water Residence Time") + ylab("Rp") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
 
 x <- log(MRB1$hrt)
 y <- 1-MRB1$Poutput/MRB1$Pinput
@@ -159,6 +182,48 @@ ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic(
 \connectivitydiagram
 
 ## Show some connectivity data
+
+\begincols
+\begincol{0.4\textwidth}
+\center
+```{r echo=FALSE, fig.height=4.5, fig.width=5, out.width="180pt", warning=FALSE, message=FALSE, results='hide'}
+library(LAGOS)
+library(ggplot2)
+library(cowplot)
+
+dt <- lagos_load("1.087.0")$lake.specific
+dt$laws <- dt$lake_area_ha/dt$iws_areaha
+levels(dt$lakeconnectivity) <- c("Secondary", "Primary", "Headwater", "Isolated")
+
+# gg <- ggplot(data = dt) + geom_bar(data = dt, aes(x = lakeconnectivity)) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("") + ylab("Count")
+# gg
+
+ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Lake Area / Watershed Area")
+```
+\endcol
+\begincol{0.6\textwidth}
+```{r echo=FALSE, fig.height=4.5, fig.width=5, out.width="200pt", warning=FALSE}
+suppressPackageStartupMessages(library(mapdata))
+
+dt_mi <- dt[dt$state_name == "Michigan",]
+# dt_mi <- dt_mi[sample(1:nrow(dt_mi), 100),]
+
+na_map <- map_data("world2Hires", c("Canada", "USA"))
+mi_map <- map_data("state", "Michigan")
+
+# ggplot()+ geom_polygon(data = mi_map, aes(x = long, y = lat, group = group)) + coord_fixed(1.3) + guides(fill = FALSE)
+
+blank_opts <- theme(legend.position = "top", axis.text = element_blank(), axis.line = element_blank(), axis.title = element_blank(), axis.ticks = element_blank())
+coord_opts <- theme(legend.position = "bottom")
+
+# ggplot() + geom_polygon(data = na_map, aes(x = long, y = lat, group = group)) + coord_fixed(1.3, xlim = c(263, 295), ylim = c(34, 49)) + geom_point(size = 0.2, data = dt, aes(x = nhd_long + 360, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=10), title = NULL)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + map_opts
+
+ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), color = "black", fill = "white") + coord_fixed(1.3) + geom_point(size = 0.02, data = dt_mi, aes(x = nhd_long, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=8), title = NULL, nrow = 2, byrow = TRUE)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + blank_opts
+
+```
+
+\endcol
+\endcols
 
 ## What are my predictions?
 
