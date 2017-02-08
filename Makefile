@@ -16,5 +16,5 @@ clean:
 	-rm *.nav *.log *.aux *.out *.snm *.toc
 	
 nutfig:
-	montage -geometry +2+2 images/cows.png images/crops.png images/city.png images/nutrientmontage.png
+	montage -geometry +2+2 -bordercolor black -border 2 images/UpperFallsHMPP.jpg images/crops.png images/city.png images/nutrientmontage.png
 
