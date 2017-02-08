@@ -1,7 +1,7 @@
 ---
 author: Joseph Stachelek
-title: "Phosphorus in 1,000s of Lakes"
-subtitle: MSU Fisheries and Wildlife Symposium
+title: "Phosphorus in 1,000s of Lakes:"
+subtitle: "A prospective talk"
 date: "2017-02-24"
 output:
   beamer_presentation:
@@ -21,19 +21,18 @@ knitr::opts_chunk$set(cache=TRUE)
 ```
 
 ## Where does phosphorus come from?
-<!-- https://www.ars.usda.gov/oc/images/image-gallery/ -->
+
+<!-- We can predict phosphorus loading from land use. -->
 
 \flushleft
-```{r cows, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="115pt", fig.align='left'}
-knitr::include_graphics("images/nutrientmontage.png")
-```
+\includegraphics[height=120pt]{images/nutrientmontage.png}
 
 \begincols
-\begincol{0.3\textwidth}
-\flushright
-Livestock
+\begincol{0.4\textwidth}
+\flushleft
+Natural Sources
 \endcol
-\begincol{0.3\textwidth}
+\begincol{0.2\textwidth}
 \flushleft
 Agriculture
 \endcol
@@ -43,26 +42,30 @@ Stormwater runoff
 \endcol
 \endcols
 
-<!-- * Land-use -->
-<!-- * Agriculture -->
-
 ## Where does phosphorus go?
+
+<!-- The difference between inputs and outputs is called retention. -->
+
+<!-- Nutrient retention is important because it says something about potential sensitivity to loading. Should we spend money to reduce loading? -->
+
+<!-- We know a lot about the mechanisms of phosphorus processing. For example, we know that phosphorus can end up either being taken up, settled, or exported. We know that all of these processes are dependent to some degree on residence time. Greater retention is associated with longer residence times but we don't know average retention, or its spatial distribution.
+-->
 
 \begincols
 \begincol{0.5\textwidth}
 
 * Plant and animal biomass
 
+\vspace{1em}
+
 * Particle settling
+
+\vspace{1em}
 
 * Outflow / Export
 
 \endcol
 \begincol{0.5\textwidth}
-
-<!-- ## What is nutrient retention? -->
-
-<!-- ### How much nutrients are present in lake outflow as a percentage of loadings? -->
 
 \center
 \vspace{-3.2em}
@@ -73,67 +76,62 @@ Stormwater runoff
 \endcol
 \endcols
 
-<!-- ## Who cares about nutrient retention? -->
+## What is water residence time?
 
-<!-- * Buffering Capacity -->
-
-<!-- * Nutrient Sensitivity -->
-
-<!-- * Water quality -->
-
-<!-- * CNH implications -->
-
-<!-- * Nutrient/Ag regulations -->
-
-## What do we know about nutrient retention?
-
-* Particle settling is important
-
-* Greater retention is associated with longer residence times
-
-## Previous studies on nutrient retention
+### How long would it take to fill up an empty lake?
 
 \begincols
-\begincol{0.5\textwidth}
-```{r echo=FALSE, warning=FALSE, message=FALSE,eval=TRUE, fig.height=4.2, fig.width=4.6}
-MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
-MRB1 <- MRB1[MRB1$hrt > 0,]
-gg <- ggplot(MRB1, aes(x=hrt, y=1-(Poutput/Pinput))) + geom_point(color = "grey") + scale_x_log10(labels = c("1e-11", "1e-07", "1e-04", "0.1", "100")) + theme_classic() + xlab("Water Residence Time") + ylab("Rp") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
-
-x <- log(MRB1$hrt)
-y <- 1-MRB1$Poutput/MRB1$Pinput
-y <- y[x > -Inf]
-x <- x[x > -Inf]
-dat <- data.frame(cbind(x, y))
-
-fit <- nls(y~a/(1+exp(-b * (x-c))), start = list(a=1, b=0.3, c= .1))
-# library(mgcv)
-# fit <- mgcv::gam(y~s(x), data = dat)
-
-dummy_x <- seq(0.000001, 100, by = 0.1)
-preds <- predict(fit, data.frame(x = dummy_x))
-# preds <- preds - min(preds)
-preds <- data.frame(x = log(dummy_x), preds = as.numeric(preds))
-# plot(preds$x, preds$preds, ylim = c(0,1))
-
-gg #+ geom_line(data = preds, aes(x, preds)) + coord_cartesian(xlim = c(1e-6, 10), ylim = c(0, 1))
-
-```
-
+\begincol{0.4\textwidth}
+$$t_w=\frac{V_L}{Q}$$
 \endcol
+\begincol{0.6\textwidth}
+\center
+```{r echo=FALSE, message=FALSE, fig.height=6, out.height="180pt", fig.width=6}
+library(ggplot2)
+MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv", stringsAsFactors = FALSE)
+MRB1 <- MRB1[!is.na(MRB1$NLA_ID),]
 
-\begincol{0.5\textwidth}
+library(nlaR)
+nla <- nlaR::nla_load(2007)
+# nla$SampledLakeInformation[nla$SampledLakeInformation$LAKENAME == "Haynes Reservoir",]
+nla <- nla$SampledLakeInformation[,c("SITE_ID", "LAKENAME")]
 
-```{r brett_fig, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="140pt"}
-knitr::include_graphics("images/brett-2008_fig6.png")
+dt <- merge(MRB1, nla, by.x = "NLA_ID", by.y = "SITE_ID", all.x = TRUE, all.y = FALSE)
+dt <- dt[!duplicated(dt$LAKENAME),]
+dt <- with(dt, dt[order(hrt),])
+dt <- within(dt, {
+  LAKENAME <- reorder(LAKENAME, seq_along(LAKENAME), order = TRUE)
+})
+# dt[dt$LAKENAME == "Spring Lake",]
+dt <- dt[,c("hrt", "LAKENAME")]
+
+superior <- data.frame(hrt = as.numeric(strsplit(wikilake::lake_wiki("Lake Superior")[,c("Residence time")], " ")[[1]][1]), LAKENAME = "Lake Superior")
+
+library(scales)
+mylog_trans <- function(base=exp(1), from=0) 
+{
+  trans <- function(x) log(x, base)-from
+  inv <- function(x) base^(x+from)
+  trans_new("mylog", trans, inv, log_breaks(base=base), 
+            domain = c(base^from, 1000))
+}
+options(scipen = 999)
+set.seed(4)
+ggplot(data = rbind(dt[sample(1:nrow(dt), 12),], superior)) + geom_bar(aes(y = hrt, x = LAKENAME), stat = "identity") + theme_classic() + scale_y_continuous(trans = mylog_trans(base = 10, from = -4), limits = c(0.0001, 1000)) + theme(axis.text.x = element_text(angle = 90, size = 16), axis.title.x = element_blank(), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + ylab("Residence Time (years)")
+options(scipen = 0)
+
 ```
 \endcol
 \endcols
 
-## test
+## How does residence time relate to nutrient retention?
+
+<!-- * How does retention vary across the full spectrum of water residence times? -->
+<!-- What are the factors that cause a lake of the same residence time to have a different retention? -->
+
 \center
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=5.0, out.height="160pt"}
-milstead <- MRB1
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4.5, fig.width=8.7}
+milstead <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv")
 milstead$Rp <- 1-(milstead$Poutput/milstead$Pinput)
 milstead$flushing.rate <- 1/milstead$hrt
 milstead$source <- "milstead"
@@ -154,7 +152,13 @@ dt <- dt[1/dt$flushing.rate < 1000 & 1/dt$flushing.rate > 0.000001,]
 # ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) + geom_point() + scale_x_log10() + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + xlab("Water Residence Time") + stat_smooth(method = "loess", se = FALSE) + facet_grid(. ~ source)
 
 # glm
-ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) + geom_point() + scale_x_log10() + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + xlab("Water Residence Time") + stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) + facet_grid(. ~ source, scales = "free_x")
+ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) +
+  geom_point() + scale_x_log10(labels = c("1e-07", "1e-04", "0.1", "100")) +
+  viridis::scale_color_viridis(discrete = TRUE, direction = -1) +
+  xlab("Water Residence Time (years)") +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  facet_grid(. ~ source, scales = "free_x") +
+  theme(strip.background = element_blank(), strip.text = element_blank())
 
 # gam
 # ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) + geom_point() + scale_x_log10() + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + xlab("Water Residence Time") + stat_smooth(method = "gam", formula = y~s(x, k = 6), se = FALSE) + facet_grid(. ~ source, scales = "free_x")
@@ -169,63 +173,43 @@ ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) + geom_
 
 ```
 
-## What is the mystery about nutrient retention?
+<!-- ```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"} -->
+<!-- library(ggplot2) -->
+<!-- MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv") -->
+<!-- ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic() + ylab("Count") + xlab("Water Residence Time (y)") + coord_cartesian(xlim=c(1e-06,1)) + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) -->
 
-### Unresolved questions about average retention and its geographical distribution
+<!-- # hivolumerating <- as.numeric(MRB1$Volume > median(MRB1$Volume)) -->
+<!-- # hiflowrating   <- as.numeric(MRB1$FlowM3_yr > median(MRB1$FlowM3_yr)) -->
+<!-- # hiflowrating[hiflowrating == 0] <- 2 -->
+<!-- # hiflowrating[hiflowrating == 1] <- 4 -->
+<!-- #  -->
+<!-- # rating <- hiflowrating + hivolumerating -->
+<!-- # rating[rating == 3] <- "low" -->
+<!-- # rating[rating == 4] <- "high" -->
+<!-- # rating[rating == 2 | rating == 5] <- "medium" -->
+<!-- # rating <- factor(rating, levels = c("low", "medium", "high")) -->
+<!-- #  -->
+<!-- # res <- matrix(table(rating) / nrow(MRB1), nrow = 2) -->
+<!-- # row.names(res) <- c("low volume", "high volume") -->
+<!-- # res <- data.frame(res) -->
+<!-- # names(res) <- c("low flow", "high flow") -->
 
-* Difficult to measure
+<!-- # plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100)) -->
+<!-- ``` -->
 
-* Previous studies limited to small numbers of lakes (w/ long residence times?)
+## What is lake connectivity?
 
-* Milstead et al. (2013) found much less nutrient retention than previous studies. 
+<!-- Variation within these classes like the number of tributary streams and upstream lakes. -->
 
-## Does shorter residence time explain the discrepancy?
-
-### What is water residence time?
-
-How long would it take to fill up an empty lake?
-
-Show a bar-chart of residence times with well-known lakes for comparison.
-
-$$t_w=\frac{V_L}{Q}$$
-
-```{r echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width=5, out.width="200pt"}
-library(ggplot2)
-ggplot(MRB1, aes(x = hrt)) + geom_histogram() + scale_x_log10() + theme_classic() + ylab("Count") + xlab("Water Residence Time (y)") + coord_cartesian(xlim=c(1e-06,1)) + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16))
-
-# hivolumerating <- as.numeric(MRB1$Volume > median(MRB1$Volume))
-# hiflowrating   <- as.numeric(MRB1$FlowM3_yr > median(MRB1$FlowM3_yr))
-# hiflowrating[hiflowrating == 0] <- 2
-# hiflowrating[hiflowrating == 1] <- 4
-# 
-# rating <- hiflowrating + hivolumerating
-# rating[rating == 3] <- "low"
-# rating[rating == 4] <- "high"
-# rating[rating == 2 | rating == 5] <- "medium"
-# rating <- factor(rating, levels = c("low", "medium", "high"))
-# 
-# res <- matrix(table(rating) / nrow(MRB1), nrow = 2)
-# row.names(res) <- c("low volume", "high volume")
-# res <- data.frame(res)
-# names(res) <- c("low flow", "high flow")
-
-# plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100))
-```
-
-## Is connectivity predictive of nutrient retention?
-
-### What are lake connectivity classes?
-<!-- http://cremeronline.com/LaTeX/minimaltikz.pdf -->
 <!-- \draw [help lines] (0,3) grid (4,-3); -->
-
 \connectivitydiagram
 
-## Show some connectivity data
+## Is connectivity predictive of nutrient retention?
 
 \begincols
 \begincol{0.4\textwidth}
 \center
-```{r echo=FALSE, fig.height=4.5, fig.width=5, out.width="180pt", warning=FALSE, message=FALSE, results='hide'}
+```{r echo=FALSE, fig.height=4.5, fig.width=4.0, out.width="160pt", warning=FALSE, message=FALSE, results='hide'}
 library(LAGOS)
 library(ggplot2)
 library(cowplot)
@@ -237,7 +221,7 @@ levels(dt$lakeconnectivity) <- c("Secondary", "Primary", "Headwater", "Isolated"
 # gg <- ggplot(data = dt) + geom_bar(data = dt, aes(x = lakeconnectivity)) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("") + ylab("Count")
 # gg
 
-ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Lake Area / Watershed Area")
+ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Residence Time (WSLA Ratio)")
 ```
 \endcol
 \begincol{0.6\textwidth}
@@ -258,7 +242,7 @@ coord_opts <- theme(legend.position = "bottom")
 
 # ggplot() + geom_polygon(data = na_map, aes(x = long, y = lat, group = group)) + coord_fixed(1.3, xlim = c(263, 295), ylim = c(34, 49)) + geom_point(size = 0.2, data = dt, aes(x = nhd_long + 360, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=10), title = NULL)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + map_opts
 
-ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), color = "black", fill = "white") + coord_fixed(1.3) + geom_point(size = 0.02, data = dt_mi, aes(x = nhd_long, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=8), title = NULL, nrow = 2, byrow = TRUE)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + blank_opts
+ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), color = "black", fill = "white") + coord_fixed(1.3) + geom_point(size = 0.02, data = dt_mi, aes(x = nhd_long, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=6), title = NULL, nrow = 2, byrow = TRUE)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + blank_opts
 
 ```
 
@@ -275,7 +259,8 @@ knitr::include_graphics("images/conceptual.png")
 
 ## What are my predictions?
 
-\center
+
+\begin{center}
 \begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |}
 \multicolumn{2}{c}{}
 & \multicolumn{3}{c}{Connectivity} \\
@@ -284,22 +269,23 @@ knitr::include_graphics("images/conceptual.png")
  &  \multicolumn{1}{c}{Medium}
  & \multicolumn{1}{c}{Low} \\
 \cline{3-5}
-& \rotatebox[origin=c]{90}{Low} & \cellcolor{black!25}Medium & \cellcolor{black!10}Low & Low\\
+& \rotatebox[origin=c]{90}{Low} & Low & \cellcolor{black!10}Low & \cellcolor{black!25}Medium\\
 \cline{3-5}
-\raisebox{-.5\normalbaselineskip}[0pt][0pt]{\rotatebox[origin=c]{90}{Water Residence Time}} & \rotatebox[origin=c]{90}{Medium} & \cellcolor{black!45}High & \cellcolor{black!25}Medium & \cellcolor{black!10}Low\\
+\raisebox{-.5\normalbaselineskip}[0pt][0pt]{\rotatebox[origin=c]{90}{Water Residence Time}} & \rotatebox[origin=c]{90}{Medium} & \cellcolor{black!10}Low & \cellcolor{black!25}Medium & \cellcolor{black!45}High\\
 \cline{3-5}
-& \rotatebox[origin=c]{90}{High} & \cellcolor{black!55}High & \cellcolor{black!45}High & \cellcolor{black!25}Medium\\
+& \rotatebox[origin=c]{90}{High} & \cellcolor{black!25}Medium & \cellcolor{black!45}High & \cellcolor{black!55}High\\
 \cline{3-5}
 \end{tabularx}
-
+\end{center}
 
 ## How I will test my predictions
 
 1. Calculate water residence time in 50,000 lakes
-
+\vspace{1em}
 2. Calculate nutrient retention
-
+\vspace{1em}
 3. Relate retention, residence time, and connectivity
+\vspace{1em}
 
 ## What are the implications of this work?
 
@@ -355,3 +341,41 @@ knitr::include_graphics("images/lagos_study-extent.png.png")
 
 <!-- * Approximately 50,000 lakes -->
 
+<!-- ## Previous studies on nutrient retention -->
+
+<!-- \begincols -->
+<!-- \begincol{0.5\textwidth} -->
+<!-- ```{r echo=FALSE, warning=FALSE, message=FALSE,eval=TRUE, fig.height=4.2, fig.width=4.6} -->
+<!-- MRB1 <- read.csv("../../Dissertation/Analysis/nutrient_retention/milstead_2013.csv") -->
+<!-- MRB1 <- MRB1[MRB1$hrt > 0,] -->
+<!-- gg <- ggplot(MRB1, aes(x=hrt, y=1-(Poutput/Pinput))) + geom_point(color = "grey") + scale_x_log10(labels = c("1e-11", "1e-07", "1e-04", "0.1", "100")) + theme_classic() + xlab("Water Residence Time") + ylab("Rp") + theme(axis.text.x = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) -->
+
+<!-- x <- log(MRB1$hrt) -->
+<!-- y <- 1-MRB1$Poutput/MRB1$Pinput -->
+<!-- y <- y[x > -Inf] -->
+<!-- x <- x[x > -Inf] -->
+<!-- dat <- data.frame(cbind(x, y)) -->
+
+<!-- fit <- nls(y~a/(1+exp(-b * (x-c))), start = list(a=1, b=0.3, c= .1)) -->
+<!-- # library(mgcv) -->
+<!-- # fit <- mgcv::gam(y~s(x), data = dat) -->
+
+<!-- dummy_x <- seq(0.000001, 100, by = 0.1) -->
+<!-- preds <- predict(fit, data.frame(x = dummy_x)) -->
+<!-- # preds <- preds - min(preds) -->
+<!-- preds <- data.frame(x = log(dummy_x), preds = as.numeric(preds)) -->
+<!-- # plot(preds$x, preds$preds, ylim = c(0,1)) -->
+
+<!-- gg #+ geom_line(data = preds, aes(x, preds)) + coord_cartesian(xlim = c(1e-6, 10), ylim = c(0, 1)) -->
+
+<!-- ``` -->
+
+<!-- \endcol -->
+
+<!-- \begincol{0.5\textwidth} -->
+
+<!-- ```{r brett_fig, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="140pt"} -->
+<!-- knitr::include_graphics("images/brett-2008_fig6.png") -->
+<!-- ``` -->
+<!-- \endcol -->
+<!-- \endcols -->
