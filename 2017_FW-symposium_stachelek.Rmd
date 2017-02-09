@@ -42,7 +42,7 @@ Stormwater runoff
 \endcol
 \endcols
 
-## Where does phosphorus go?
+## Where does phosphorus go? Why do we care?
 
 <!-- The difference between inputs and outputs is called retention. -->
 
@@ -83,6 +83,8 @@ Stormwater runoff
 \begincols
 \begincol{0.4\textwidth}
 $$t_w=\frac{V_L}{Q}$$
+
+$$y = \frac{m^3}{1}*\frac{y}{m^3}$$
 \endcol
 \begincol{0.6\textwidth}
 \center
@@ -128,6 +130,19 @@ options(scipen = 0)
 
 <!-- * How does retention vary across the full spectrum of water residence times? -->
 <!-- What are the factors that cause a lake of the same residence time to have a different retention? -->
+
+\begincols
+\begincol{0.5\textwidth}
+\flushright
+\footnotesize
+Brett and Benjamin (2008)
+\endcol
+\begincol{0.5\textwidth}
+\flushright
+\footnotesize
+Milstead et al. (2013)
+\endcol
+\endcols
 
 \center
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4.5, fig.width=8.7}
@@ -204,7 +219,7 @@ ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) +
 <!-- \draw [help lines] (0,3) grid (4,-3); -->
 \connectivitydiagram
 
-## Is connectivity predictive of nutrient retention?
+## Connectivity versus residence time
 
 \begincols
 \begincol{0.4\textwidth}
@@ -252,12 +267,12 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 ## What are my predictions?
 
 \center
-```{r predictions, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
+```{r predictions, eval=TRUE, echo=FALSE, fig.height=7.0, out.height="120pt"}
 knitr::include_graphics("images/conceptual.png")
 ```
 
 
-## What are my predictions?
+## Nutrient retention predictions
 
 
 \begin{center}
@@ -281,11 +296,11 @@ knitr::include_graphics("images/conceptual.png")
 ## How I will test my predictions
 
 1. Calculate water residence time in 50,000 lakes
-\vspace{1em}
+\vspace{3em}
 2. Calculate nutrient retention
-\vspace{1em}
+\vspace{3em}
 3. Relate retention, residence time, and connectivity
-\vspace{1em}
+\vspace{3em}
 
 ## What are the implications of this work?
 
