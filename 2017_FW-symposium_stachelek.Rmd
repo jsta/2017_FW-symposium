@@ -270,6 +270,7 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 \center
 \includegraphics[width=7.5cm]{images/conceptual.png}
 
+
 ## Nutrient retention predictions
 
 \hspace{3cm}
@@ -314,7 +315,7 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 
 \center
 ```{r lagos, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
-knitr::include_graphics("images/lagos_study-extent.png.png")
+knitr::include_graphics("images/lagos_study-extent.png")
 ```
 
 
