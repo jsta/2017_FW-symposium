@@ -1,3 +1,4 @@
+\PassOptionsToPackage{dvipsnames}{xcolor}
 %% header.tex
 %%
 %% Copyright (C) 2016 - 2017  Dirk Eddelbuettel
@@ -47,6 +48,8 @@
 %%% TeX-master: t
 %%% End:
 
+% \usepackage[dvipsnames]{xcolor}
+
 \def\begincols{\begin{columns}}
 \def\endcols{\end{columns}}
 \def\begincol{\begin{column}}
@@ -74,7 +77,7 @@
 
 % Draw the water and ripples
 \draw [draw=blue!80!black, decoration={bumps, mirror, segment length=6mm}, decorate,
-     bottom color=cyan!60!black, top color=green!20!white] 
+     bottom color=cyan!60!black, top color=darkgreen!20!white] 
   (lower left) rectangle (water level-|upper right);
 
 % Draw the ground
@@ -176,7 +179,7 @@
 \usepackage{pbox}
 \usepackage{multirow}
 \usepackage{tabularx}
-\usepackage{xcolor,colortbl}
+\usepackage{colortbl}
 
 \usepackage{array}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -187,3 +190,178 @@
  >{\vbox to 5ex\bgroup\vfill\centering}%
  p{#1}%
  <{\egroup}} 
+ 
+\def\secondaryprofile{
+\begin{tikzpicture}[scale = 0.6]
+  \draw [-,ultra thick, cyan!40] (1,0) to [out=0,in=180] (2.25,0);
+  \draw [-,ultra thick, dashed, cyan!40] (6,0) to [out=0,in=180] (7.25,0);
+  \node at (2, 1) {Secondary};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (1cm and 0.25cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (1,0) {[rounded corners=45pt] -- (0,-2)} -- (-1,0) arc (180:360:1cm and 0.25cm);
+  
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45,
+  xshift=120
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25,
+  xshift=120
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\def\headwaterprofile{
+\begin{tikzpicture}[scale = 0.6]
+  \draw [-,ultra thick, cyan!40] (2,0) to [out=0,in=180] (3.25,0);
+  \node at (0.4, 1) {Headwater};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\def\primaryprofile{
+\begin{tikzpicture}[scale = 0.6]
+  \draw [-,ultra thick, cyan!40] (-2,0) to [out=0,in=180] (-3.25,0);
+  \draw [-,ultra thick, dashed, cyan!40] (2,0) to [out=0,in=180] (3.25,0);
+  \node at (0.4, 1) {Primary};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\def\isolatedprofile{
+\begin{tikzpicture}[scale = 0.4]
+  \node at (0.65, 1) {Isolated};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\definecolor{darkgreen}{rgb}{0.13,0.62,0.25}
+
+
+\def\primaryprofileplus{
+\begin{tikzpicture}[scale = 0.8]
+  \draw [-,line width=3pt, cyan!40] (-2,0) to [out=0,in=180] (-3.25,0);
+  \draw [-,ultra thick, dashed, cyan!40] (2,0) to [out=0,in=180] (3.25,0);
+  \node at (0.2, 1) {Primary};
+\fill[
+  top color=darkgreen!100,
+  bottom color=darkgreen!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=darkgreen!50!black,
+  right color=darkgreen!50!black,
+  middle color=darkgreen!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\def\secondaryprofileplus{
+\begin{tikzpicture}[scale = 0.8]
+  \draw [-,line width=3pt, cyan!40] (-1,0) to [out=0,in=180] (-2.25,0);
+  \draw [-,line width=3pt, cyan!40] (1,0) to [out=0,in=180] (2.25,0);
+  \draw [-,line width=3pt, dashed, cyan!40] (6,0) to [out=0,in=180] (7.25,0);
+  \node at (2, 1) {Secondary};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (1cm and 0.25cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (1,0) {[rounded corners=45pt] -- (0,-2)} -- (-1,0) arc (180:360:1cm and 0.25cm);
+  
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45,
+  xshift=120
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25,
+  xshift=120
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}

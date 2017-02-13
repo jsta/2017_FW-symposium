@@ -1,6 +1,6 @@
 ---
 author: Joseph Stachelek
-title: "Phosphorus in 1,000s of Lakes:"
+title: "Lake Connectivity Effects on Phosphorus in 1,000s of Lakes:"
 subtitle: "A prospective talk"
 date: "2017-02-24"
 output:
@@ -28,9 +28,13 @@ knitr::opts_chunk$set(cache=TRUE)
 \includegraphics[height=120pt]{images/nutrientmontage.png}
 
 \begincols
-\begincol{0.4\textwidth}
+\begincol{0.3\textwidth}
 \flushleft
 Natural Sources
+\endcol
+\begincol{0.2\textwidth}
+\flushleft
+Mining
 \endcol
 \begincol{0.2\textwidth}
 \flushleft
@@ -42,11 +46,8 @@ Stormwater runoff
 \endcol
 \endcols
 
-## Where does phosphorus go? Why do we care?
-
+## Where does phosphorus go? 
 <!-- The difference between inputs and outputs is called retention. -->
-
-<!-- Nutrient retention is important because it says something about potential sensitivity to loading. Should we spend money to reduce loading? -->
 
 <!-- We know a lot about the mechanisms of phosphorus processing. For example, we know that phosphorus can end up either being taken up, settled, or exported. We know that all of these processes are dependent to some degree on residence time. Greater retention is associated with longer residence times but we don't know average retention, or its spatial distribution.
 -->
@@ -66,7 +67,7 @@ Stormwater runoff
 
 \endcol
 \begincol{0.5\textwidth}
-
+\pause
 \center
 \vspace{-3.2em}
 \lakediagramblue
@@ -76,6 +77,10 @@ Stormwater runoff
 \endcol
 \endcols
 
+## Why do we care?
+
+<!-- Nutrient retention is important because it says something about potential sensitivity to loading. Should we spend money to reduce loading? -->
+
 ## What is water residence time?
 
 ### How long would it take to fill up an empty lake?
@@ -83,8 +88,9 @@ Stormwater runoff
 \begincols
 \begincol{0.4\textwidth}
 $$t_w=\frac{V_L}{Q}$$
-
+\pause
 $$y = \frac{m^3}{1}*\frac{y}{m^3}$$
+\pause
 \endcol
 \begincol{0.6\textwidth}
 \center
@@ -125,6 +131,7 @@ options(scipen = 0)
 ```
 \endcol
 \endcols
+
 
 ## How does residence time relate to nutrient retention?
 
@@ -172,7 +179,7 @@ ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) +
   viridis::scale_color_viridis(discrete = TRUE, direction = -1) +
   xlab("Water Residence Time (years)") +
   stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
-  facet_grid(. ~ source, scales = "free_x") +
+  facet_grid(. ~ source) +
   theme(strip.background = element_blank(), strip.text = element_blank())
 
 # gam
@@ -212,12 +219,39 @@ ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) +
 <!-- # plot(MRB1$Volume/MRB1$FlowM3_yr, MRB1$hrt, xlim = c(0, 100), ylim = c(0, 100)) -->
 <!-- ``` -->
 
+<!-- ## What is lake connectivity? -->
+
+<!-- <!-- Variation within these classes like the number of tributary streams and upstream lakes. --> -->
+
+<!-- <!-- \draw [help lines] (0,3) grid (4,-3); --> -->
+<!-- \connectivitydiagram -->
+
+
 ## What is lake connectivity?
 
-<!-- Variation within these classes like the number of tributary streams and upstream lakes. -->
+\begincols
 
-<!-- \draw [help lines] (0,3) grid (4,-3); -->
-\connectivitydiagram
+\begincol{0.33\textwidth}
+\vspace{-2em}
+\secondaryprofile
+\endcol
+
+\begincol{0.33\textwidth}
+\vspace{4em}
+\primaryprofile
+\endcol
+
+\begincol{0.33\textwidth}
+\vspace{-10em}
+\headwaterprofile
+\endcol
+
+\begincol{0.33\textwidth}
+\vspace{-12em}
+\isolatedprofile
+\endcol
+
+\endcols
 
 ## Connectivity versus residence time
 
@@ -238,7 +272,8 @@ median(dt$laws[dt$lakeconnectivity == "DR_Stream"], na.rm = TRUE)
 # gg <- ggplot(data = dt) + geom_bar(data = dt, aes(x = lakeconnectivity)) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("") + ylab("Count")
 # gg
 
-ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Residence Time (WSLA Ratio)") + scale_x_discrete(limits = c("Primary", "Secondary", "Headwater", "Isolated"))
+ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Residence Time (WSLA Ratio)")
+# + scale_x_discrete(limits = c("Primary", "Secondary", "Headwater", "Isolated"))
 ```
 \endcol
 \begincol{0.75\textwidth}
@@ -251,15 +286,21 @@ dt_mi <- dt[dt$state_name == "Michigan",]
 
 na_map <- map_data("world2Hires", c("Canada", "USA"))
 mi_map <- map_data("state", "Michigan")
+mi_map <- mi_map[mi_map$subregion == "south",]
 
+dt_mi <- dt_mi[dt_mi$nhd_long < max(mi_map$long) &
+                 dt_mi$nhd_long > min(mi_map$long) &
+                 dt_mi$nhd_lat < max(mi_map$lat) &
+                 dt_mi$nhd_lat > min(mi_map$lat),]
+           
 # ggplot()+ geom_polygon(data = mi_map, aes(x = long, y = lat, group = group)) + coord_fixed(1.3) + guides(fill = FALSE)
 
-blank_opts <- theme(legend.position = c(0.32, 0.4), axis.text = element_blank(), axis.line = element_blank(), axis.title = element_blank(), axis.ticks = element_blank())
+blank_opts <- theme(legend.position = c(0.93, 0.73), axis.text = element_blank(), axis.line = element_blank(), axis.title = element_blank(), axis.ticks = element_blank())
 coord_opts <- theme(legend.position = "bottom")
 
 # ggplot() + geom_polygon(data = na_map, aes(x = long, y = lat, group = group)) + coord_fixed(1.3, xlim = c(263, 295), ylim = c(34, 49)) + geom_point(size = 0.2, data = dt, aes(x = nhd_long + 360, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=10), title = NULL)) + viridis::scale_color_viridis(discrete = TRUE, direction = -1) + map_opts
 
-ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), color = "black", fill = "white") + coord_fixed(1.3) + geom_point(size = 0.8, data = dt_mi[sample(1:nrow(dt_mi), 560),], aes(x = nhd_long, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=6), title = NULL)) + blank_opts + scale_color_brewer(palette = "Set1")
+ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), color = "black", fill = "white") + coord_fixed(1.3) + geom_point(size = 0.8, data = dt_mi[sample(1:nrow(dt_mi), 760),], aes(x = nhd_long, y = nhd_lat, color = lakeconnectivity)) + guides(fill = FALSE) + guides(colour = guide_legend(override.aes = list(size=6), title = NULL)) + blank_opts + scale_color_brewer(palette = "Set1")
 # viridis::scale_color_viridis(option = "plasma", discrete = TRUE, direction = -1) + blank_opts
 
 ```
@@ -271,53 +312,75 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 \center
 \includegraphics[width=7.5cm]{images/conceptual.png}
 
-
 ## Nutrient retention predictions
+<!-- \begincols -->
+<!-- \begincol{0.33\textwidth} -->
+<!-- Loading -->
+<!-- \endcol -->
+<!-- \begincol{0.33\textwidth} -->
+\center
+\secondaryprofileplus
+\primaryprofileplus
+<!-- \endcol -->
+<!-- \begincol{0.33\textwidth} -->
+<!-- \flushright -->
+<!-- Losses -->
+<!-- \endcol -->
+<!-- \endcols -->
 
-\hspace{3cm}
-\begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |}
-\multicolumn{2}{c}{}
-& \multicolumn{3}{c}{Connectivity} \\
-\multicolumn{2}{c}{}
- &  \multicolumn{1}{c}{
- \begin{tikzpicture}[scale=0.2]
-      \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0.3) to [out=90,in=0] (0,-1) to [out=90,in=0] (0.2,-2) to [out=180,in=90] (-1,-3);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=20] plot (\x:0.5+rnd*0.25);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=-50] plot (\x:0.8+rnd*0.5);
-    \end{tikzpicture}}
- &  \multicolumn{1}{c}{
- \begin{tikzpicture}[scale=0.2]
-      \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0);
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] (0,-3) plot (\x:1+rnd*0.5);
-  \end{tikzpicture}}
- & \multicolumn{1}{c}{
- \begin{tikzpicture}[scale=0.4]
-      \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] plot (\x:1+rnd*0.5);
-  \end{tikzpicture}} \\
-\cline{3-5}
-& \rotatebox[origin=c]{90}{Low} & Low & \cellcolor{black!10}Low & \cellcolor{black!25}Medium\\
-\cline{3-5}
-\raisebox{-.5\normalbaselineskip}[0pt][0pt]{\rotatebox[origin=c]{90}{Water Residence Time}} & \rotatebox[origin=c]{90}{Medium} & \cellcolor{black!10}Low & \cellcolor{black!25}Medium & \cellcolor{black!45}High\\
-\cline{3-5}
-& \rotatebox[origin=c]{90}{High} & \cellcolor{black!25}Medium & \cellcolor{black!45}High & \cellcolor{black!55}High\\
-\cline{3-5}
-\end{tabularx}
+<!-- ## Nutrient retention predictions -->
+
+<!-- \hspace{3cm} -->
+<!-- \begin{tabularx}{\textwidth}{ l c| K{1.5cm} | C {1.5cm} | C{1.5cm} |} -->
+<!-- \multicolumn{2}{c}{} -->
+<!-- & \multicolumn{3}{c}{Connectivity} \\ -->
+<!-- \multicolumn{2}{c}{} -->
+<!--  &  \multicolumn{1}{c}{ -->
+<!--  \begin{tikzpicture}[scale=0.2] -->
+<!--       \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0.3) to [out=90,in=0] (0,-1) to [out=90,in=0] (0.2,-2) to [out=180,in=90] (-1,-3); -->
+<!--       \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=20] plot (\x:0.5+rnd*0.25); -->
+<!--       \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan,yshift=-50] plot (\x:0.8+rnd*0.5); -->
+<!--     \end{tikzpicture}} -->
+<!--  &  \multicolumn{1}{c}{ -->
+<!--  \begin{tikzpicture}[scale=0.2] -->
+<!--       \draw [-,ultra thick, cyan] (-1,3) to [out=270,in=180] (0.2,2) to [out=0,in=90] (0,0); -->
+<!--       \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] (0,-3) plot (\x:1+rnd*0.5); -->
+<!--   \end{tikzpicture}} -->
+<!--  & \multicolumn{1}{c}{ -->
+<!--  \begin{tikzpicture}[scale=0.4] -->
+<!--       \draw[cyan, ultra thick, domain=0:350, smooth cycle, fill=cyan] plot (\x:1+rnd*0.5); -->
+<!--   \end{tikzpicture}} \\ -->
+<!-- \cline{3-5} -->
+<!-- & \rotatebox[origin=c]{90}{Low} & Low & \cellcolor{darkgreen!30}Low & \cellcolor{darkgreen!75}Medium\\ -->
+<!-- \cline{3-5} -->
+<!-- \raisebox{-.5\normalbaselineskip}[0pt][0pt]{\rotatebox[origin=c]{90}{Water Residence Time}} & \rotatebox[origin=c]{90}{Medium} & \cellcolor{darkgreen!30}Low & \cellcolor{darkgreen!75}Medium & \cellcolor{darkgreen}High\\ -->
+<!-- \cline{3-5} -->
+<!-- & \rotatebox[origin=c]{90}{High} & \cellcolor{darkgreen!75}Medium & \cellcolor{darkgreen}High & \cellcolor{darkgreen}High\\ -->
+<!-- \cline{3-5} -->
+<!-- \end{tabularx} -->
 
 ## How I will test my predictions
 
-1. Calculate water residence time in 50,000 lakes
-\vspace{3em}
-2. Calculate nutrient retention
-\vspace{3em}
-3. Relate retention, residence time, and connectivity
-\vspace{3em}
-
-## What are the implications of this work?
-
+### Calculate water residence time in 50,000 lakes
+\pause
 \center
 ```{r lagos, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
 knitr::include_graphics("images/lagos_study-extent.png")
 ```
+
+## How I will test my predictions
+### Calculate water residence time in 50,000 lakes
+\vspace{3em}
+### Calculate nutrient retention
+\vspace{3em}
+
+## How I will test my predictions
+### Calculate water residence time in 50,000 lakes
+\vspace{3em}
+### Calculate nutrient retention
+\vspace{3em}
+### Relate retention, residence time, and connectivity
+\vspace{3em}
 
 
 <!-- http://www.jpl.nasa.gov/spaceimages/images/largesize/PIA03434_hires.jpg -->

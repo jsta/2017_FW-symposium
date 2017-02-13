@@ -15,5 +15,5 @@ clean:
 	-rm *.nav *.log *.aux *.out *.snm *.toc
 	
 images/nutrientmontage.png:
-	montage -geometry +2+2 -bordercolor black -border 2 images/UpperFallsHMPP.jpg images/crops.png images/city.png images/nutrientmontage.png
+	montage -geometry +2+2 -tile 4x1 -bordercolor black -border 2 images/UpperFallsHMPP.jpg images/mining.png images/crops.png images/city.png images/nutrientmontage.png
 
