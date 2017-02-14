@@ -1,5 +1,5 @@
 ---
-author: Joseph Stachelek
+author: Joseph Stachelek (@jjstache)
 title: "Lake Connectivity Effects on Phosphorus in 1,000s of Lakes:"
 subtitle: "A prospective talk"
 date: "2017-02-24"
@@ -29,11 +29,11 @@ knitr::opts_chunk$set(cache=TRUE)
 
 \begincols
 \begincol{0.3\textwidth}
-\flushleft
+\flushright
 Natural Sources
 \endcol
 \begincol{0.2\textwidth}
-\flushleft
+\center
 Mining
 \endcol
 \begincol{0.2\textwidth}
@@ -80,6 +80,13 @@ Stormwater runoff
 ## Why do we care?
 
 <!-- Nutrient retention is important because it says something about potential sensitivity to loading. Should we spend money to reduce loading? -->
+
+* Watershed sensitivity to loading
+
+\center
+\includegraphics[width=8.5cm]{images/nwqi.jpg}
+
+* Too broad? Too narrow? How to target?
 
 ## What is water residence time?
 
@@ -221,9 +228,9 @@ ggplot(data = na.omit(dt[dt$Rp > 0,]), aes(x = 1/flushing.rate, y = Rp)) +
 
 <!-- ## What is lake connectivity? -->
 
-<!-- <!-- Variation within these classes like the number of tributary streams and upstream lakes. --> -->
+<!-- Variation within these classes like the number of tributary streams and upstream lakes. --> 
 
-<!-- <!-- \draw [help lines] (0,3) grid (4,-3); --> -->
+<!-- <!-- \draw [help lines] (0,3) grid (4,-3); -->
 <!-- \connectivitydiagram -->
 
 
@@ -321,6 +328,12 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 \center
 \secondaryprofileplus
 \primaryprofileplus
+
+<!-- Greater sedimentation due to less processing of runoff -->
+<!-- Greater P rich groundwater inputs -->
+
+
+
 <!-- \endcol -->
 <!-- \begincol{0.33\textwidth} -->
 <!-- \flushright -->
@@ -360,27 +373,22 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 <!-- \end{tabularx} -->
 
 ## How I will test my predictions
-
 ### Calculate water residence time in 50,000 lakes
+\vspace{3em}
 \pause
+
+### Calculate nutrient retention
+\vspace{3em}
+\pause
+
+### Relate retention, residence time, and connectivity
+\vspace{3em}
+
+## How I will test my predictions
 \center
 ```{r lagos, eval=TRUE, echo=FALSE, fig.height=3.0, out.height="180pt"}
 knitr::include_graphics("images/lagos_study-extent.png")
 ```
-
-## How I will test my predictions
-### Calculate water residence time in 50,000 lakes
-\vspace{3em}
-### Calculate nutrient retention
-\vspace{3em}
-
-## How I will test my predictions
-### Calculate water residence time in 50,000 lakes
-\vspace{3em}
-### Calculate nutrient retention
-\vspace{3em}
-### Relate retention, residence time, and connectivity
-\vspace{3em}
 
 
 <!-- http://www.jpl.nasa.gov/spaceimages/images/largesize/PIA03434_hires.jpg -->
