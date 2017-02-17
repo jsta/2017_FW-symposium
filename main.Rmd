@@ -322,7 +322,7 @@ ggplot() + geom_polygon(data = mi_map, aes(x = long, y = lat, group = group), co
 # gg <- ggplot(data = dt) + geom_bar(data = dt, aes(x = lakeconnectivity)) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("") + ylab("Count")
 # gg
 
-ggplot(data = dt) + geom_boxplot(data = dt, aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Residence Time (WSLA Ratio)")
+ggplot(data = dt_mi) + geom_boxplot(aes(x = lakeconnectivity, y = laws), outlier.shape = NA) + theme_cowplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(ylim = c(0,1)) + xlab("") + ylab("Residence Time (WSLA Ratio)") + geom_label(data = data.frame(x = c(1, 2, 3, 4), y = c(1, 1, 1, 1)), aes(x, y, label = paste0(round(as.numeric(table(dt_mi$lakeconnectivity) / sum(table(dt_mi$lakeconnectivity)) * 100), 0), " %")))
 # + scale_x_discrete(limits = c("Primary", "Secondary", "Headwater", "Isolated"))
 ```
 \endcol
