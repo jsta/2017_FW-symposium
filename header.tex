@@ -365,3 +365,49 @@
   (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
 \end{tikzpicture}
 }
+
+\def\primaryprofileblue{
+\begin{tikzpicture}[scale = 0.8]
+  \draw [-,line width=5pt, cyan!40] (-2,0) to [out=0,in=180] (-3.25,0);
+  \draw [-,line width=5pt, dashed, cyan!40] (2,0) to [out=0,in=180] (3.25,0);
+  \node at (0.2, 1) {Low retention};
+\fill[
+  top color=cyan!100,
+  bottom color=cyan!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=cyan!50!black,
+  right color=cyan!50!black,
+  middle color=cyan!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}
+
+\def\primaryprofilegreen{
+\begin{tikzpicture}[scale = 0.8]
+  \draw [-,line width=5pt, cyan!40] (-2,0) to [out=0,in=180] (-3.25,0);
+  \draw [-,thick, dashed, darkgreen!40] (2,0) to [out=0,in=180] (3.25,0);
+  \node at (0.2, 1) {High retention};
+\fill[
+  top color=darkgreen!100,
+  bottom color=darkgreen!40,
+  shading=axis,
+  opacity=0.45
+  ] 
+  (0,0) circle (2cm and 0.5cm);
+\fill[
+  left color=darkgreen!50!black,
+  right color=darkgreen!50!black,
+  middle color=darkgreen!100,
+  shading=axis,
+  opacity=0.25
+  ] 
+  (2,0) {[rounded corners=45pt] -- (0,-3)} -- (-2,0) arc (180:360:2cm and 0.5cm);
+\end{tikzpicture}
+}

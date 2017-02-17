@@ -70,9 +70,9 @@ Stormwater runoff
 \pause
 \center
 \vspace{-3.2em}
-\lakediagramblue
+\primaryprofileblue
 \vspace{-1em}
-\lakediagramgreen
+\primaryprofilegreen
 
 \endcol
 \endcols
@@ -84,7 +84,11 @@ Stormwater runoff
 * Watershed sensitivity to loading
 
 \center
-\includegraphics[width=8.5cm]{images/nwqi.jpg}
+{
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{1pt}%
+\fbox{\includegraphics[width=8.5cm]{images/nwqi.jpg}}
+}
 
 * Too broad? Too narrow? How to target?
 
