@@ -98,7 +98,7 @@ Stormwater runoff
 
 \begincols
 \begincol{0.4\textwidth}
-$$t_w=\frac{V_L}{Q}$$
+$$Residence Time=\frac{Volume}{Flow}$$
 \pause
 $$y = \frac{m^3}{1}*\frac{y}{m^3}$$
 \pause
@@ -136,7 +136,14 @@ mylog_trans <- function(base=exp(1), from=0)
 }
 options(scipen = 999)
 set.seed(4)
-ggplot(data = rbind(dt[sample(1:nrow(dt), 12),], superior)) + geom_bar(aes(y = hrt, x = LAKENAME), stat = "identity") + theme_classic() + scale_y_continuous(trans = mylog_trans(base = 10, from = -4), limits = c(0.0001, 1000)) + theme(axis.text.x = element_text(angle = 90, size = 16), axis.title.x = element_blank(), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + ylab("Residence Time (years)")
+ggplot(data = rbind(dt[sample(1:nrow(dt), 12),], superior)) +
+  geom_bar(aes(y = hrt, x = LAKENAME), stat = "identity") +
+  theme_classic() +
+  scale_y_continuous(trans = mylog_trans(base = 10, from = -4), limits = c(0.0001, 1000), labels = c("5", "1 day", "1 month", "10 years", "1000 years")) +
+  scale_x_discrete(labels = c(rep("", 12), "Lake Superior")) +
+  theme(axis.text.x = element_text(angle = 90, size = 16), axis.title.x = element_blank(), axis.title = element_text(size = 16), axis.text = element_text(size = 16)) +
+  ylab("Residence Time (years)")
+
 options(scipen = 0)
 
 ```
@@ -328,7 +335,7 @@ ggplot(data = dt_mi) + geom_boxplot(aes(x = lakeconnectivity, y = laws), outlier
 \endcol
 \endcols
 
-## What are my predictions?
+## How does connectivity influence retention?
 \center
 \includegraphics[width=7.5cm]{images/conceptual.png}
 
@@ -397,7 +404,7 @@ ggplot(data = dt_mi) + geom_boxplot(aes(x = lakeconnectivity, y = laws), outlier
 ### Relate retention, residence time, and connectivity
 \vspace{3em}
 
-## How I will test my predictions
+## Testing predictions with LAGOS-NE
 \center
 \includegraphics[width=8.5cm]{images/lagos_study-extent.png}
 
