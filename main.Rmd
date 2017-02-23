@@ -25,7 +25,7 @@ knitr::opts_chunk$set(cache=TRUE)
 <!-- We can predict phosphorus loading from land use. -->
 
 \flushleft
-\includegraphics[height=120pt]{images/nutrientmontage.png}
+\includegraphics[height=83pt]{images/nutrientmontage.png}
 
 \begincols
 \begincol{0.3\textwidth}
@@ -33,11 +33,11 @@ knitr::opts_chunk$set(cache=TRUE)
 Natural Sources
 \endcol
 \begincol{0.2\textwidth}
-\center
+\flushright
 Mining
 \endcol
 \begincol{0.2\textwidth}
-\flushleft
+\flushright
 Agriculture
 \endcol
 \begincol{0.3\textwidth}
